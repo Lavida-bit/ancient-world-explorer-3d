@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>3D Globe Starter</title>
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#020617;color:#fff;font-family:Arial}
+#ui{position:absolute;left:10px;top:10px;background:rgba(0,0,0,.6);padding:10px;border-radius:8px;max-width:320px}
+#info{margin-top:8px;font-size:14px}
+</style></head>
+<body>
+<div id="ui"><h3>Ancient Sites Explorer</h3><div>Click a marker.</div><div id="info">Ready.</div></div>
+<script type="module">
+import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+import {OrbitControls} from 'https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,.1,1000);camera.position.set(0,0,3);
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setSize(innerWidth,innerHeight);document.body.appendChild(renderer.domElement);
+const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;
+scene.add(new THREE.AmbientLight(0xffffff,1));
+const earth=new THREE.Mesh(new THREE.SphereGeometry(1,64,64),new THREE.MeshPhongMaterial({color:0x2d6cdf}));
+scene.add(earth);
+const stars=new THREE.Points(new THREE.BufferGeometry(),new THREE.PointsMaterial({color:0xffffff,size:.02}));
+let pts=[];for(let i=0;i<2000;i++){pts.push((Math.random()-.5)*80,(Math.random()-.5)*80,(Math.random()-.5)*80);}
+stars.geometry.setAttribute('position',new THREE.Float32BufferAttribute(pts,3));scene.add(stars);
+const data=[
+["Great Pyramid",29.9792,31.1342],["Stonehenge",51.1789,-1.8262],["Göbekli Tepe",37.2231,38.9226],
+["Machu Picchu",-13.1631,-72.545],["Easter Island",-27.1127,-109.3497],["Nazca Lines",-14.739,-75.13],
+["Baalbek",34.006,36.203],["Puma Punku",-16.554,-68.673],["Chichen Itza",20.6843,-88.5678],["Petra",30.3285,35.4444]];
+const markers=[],ray=new THREE.Raycaster(),mouse=new THREE.Vector2(),info=document.getElementById('info');
+function ll(lat,lon,r=1.03){let p=(90-lat)*Math.PI/180,t=(lon+180)*Math.PI/180;return new THREE.Vector3(-r*Math.sin(p)*Math.cos(t),r*Math.cos(p),r*Math.sin(p)*Math.sin(t));}
+data.forEach(d=>{const m=new THREE.Mesh(new THREE.SphereGeometry(.02),new THREE.MeshBasicMaterial({color:0xff4444}));m.position.copy(ll(d[1],d[2]));m.userData={name:d[0]};scene.add(m);markers.push(m);});
+addEventListener('pointerdown',e=>{mouse.x=e.clientX/innerWidth*2-1;mouse.y=-(e.clientY/innerHeight)*2+1;ray.setFromCamera(mouse,camera);let hit=ray.intersectObjects(markers)[0];if(hit)info.innerHTML="<b>"+hit.object.userData.name+"</b><br>Mainstream: Archaeological site.<br><i>Alternative theories should be treated as speculative.</i>";});
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
+(function anim(){requestAnimationFrame(anim);earth.rotation.y+=0.002;controls.update();renderer.render(scene,camera);})();
+</script></body></html>
