@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ancient World Explorer 3D</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Orbit Controls -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/controls/OrbitControls.js"></script>
+</head>
+
+<body>
+
+<div id="loadingScreen">
+    <h1>🌍 Ancient World Explorer</h1>
+    <p>Loading 3D World...</p>
+</div>
+
+<header>
+
+    <h1>🌍 Ancient World Explorer</h1>
+
+    <div id="searchContainer">
+        <input
+            id="search"
+            type="text"
+            placeholder="Search monuments..."
+        >
+    </div>
+
+</header>
+
+<div id="uiPanel">
+
+    <h2 id="siteTitle">
+        Select a Monument
+    </h2>
+
+    <p id="siteDescription">
+        Click any glowing marker on Earth to learn about its history,
+        mainstream explanations, and alternative theories.
+    </p>
+
+</div>
+
+<div id="globeContainer"></div>
+
+<footer>
+
+    Educational purposes only.
+    Alternative theories will always be clearly labelled as speculative.
+
+</footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
